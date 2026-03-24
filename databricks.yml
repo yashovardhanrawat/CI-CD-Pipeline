@@ -1,9 +1,5 @@
-
-
 bundle:
   name: my_databricks_project
-
-# Jobs shared across all environments
 
 resources:
   jobs:
@@ -13,13 +9,6 @@ resources:
         - task_key: main_notebook
           notebook_task:
             notebook_path: ./notebooks/main.py
-          new_cluster:
-            spark_version: "14.3.x-scala2.12"
-            node_type_id: "Standard_DS3_v2"
-            num_workers: 2
-
-
-# Environments — all point to the SAME workspace, different paths
 
 targets:
   dev:
@@ -31,12 +20,9 @@ targets:
   staging:
     workspace:
       host: https://adb-7405617514546966.6.azuredatabricks.net
-      root_path: /Workspace/Shared/bundles/${bundle.name}/staging
+      root_path: /Workspace/Users/yashovardhan.rawat@airodigitallabs.com/bundles/${bundle.name}/staging
 
   production:
     workspace:
       host: https://adb-7405617514546966.6.azuredatabricks.net
-      root_path: /Workspace/Shared/bundles/${bundle.name}/production
-    permissions:
-      - level: CAN_MANAGE
-        group_name: admins
+      root_path: /Workspace/Users/yashovardhan.rawat@airodigitallabs.com/bundles/${bundle.name}/production
