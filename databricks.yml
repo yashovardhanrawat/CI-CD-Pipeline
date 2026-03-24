@@ -1,0 +1,42 @@
+
+
+bundle:
+  name: my_databricks_project
+
+# Jobs shared across all environments
+
+resources:
+  jobs:
+    etl_pipeline:
+      name: "${bundle.target}-etl-pipeline"
+      tasks:
+        - task_key: main_notebook
+          notebook_task:
+            notebook_path: ./notebooks/main.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "Standard_DS3_v2"
+            num_workers: 2
+
+
+# Environments — all point to the SAME workspace, different paths
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405617514546966.6.azuredatabricks.net
+
+  staging:
+    workspace:
+      host: https://adb-7405617514546966.6.azuredatabricks.net
+      root_path: /Workspace/Shared/bundles/${bundle.name}/staging
+
+  production:
+    workspace:
+      host: https://adb-7405617514546966.6.azuredatabricks.net
+      root_path: /Workspace/Shared/bundles/${bundle.name}/production
+    permissions:
+      - level: CAN_MANAGE
+        group_name: admins
