@@ -1,6 +1,6 @@
 bundle:
   name: my_databricks_project
- 
+
 resources:
   jobs:
     etl_pipeline:
@@ -9,19 +9,19 @@ resources:
         - task_key: main_notebook
           notebook_task:
             notebook_path: ./notebooks/main.py
- 
+
 targets:
   dev:
     mode: development
     default: true
     workspace:
       host: https://adb-7405617514546966.6.azuredatabricks.net
- 
+
   staging:
     workspace:
-      host:https://adb-7405617514546966.6.azuredatabricks.net
+      host: https://adb-7405617514546966.6.azuredatabricks.net
       root_path: /Workspace/Users/yashovardhan.rawat@airodigitallabs.com/bundles/${bundle.name}/staging
- 
+
   production:
     workspace:
       host: https://adb-7405617514546966.6.azuredatabricks.net
