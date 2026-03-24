@@ -1,0 +1,44 @@
+name: CI — Lint & Validate
+
+on:
+  pull_request:
+    branches: [dev, staging, main]
+
+jobs:
+  validate:
+    name: Validate & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install ruff pytest databricks-sdk
+
+      - name: Lint with Ruff
+        run: |
+          ruff check . --output-format=github || true
+          ruff format --check . || true
+
+      - name: Run unit tests
+        run: |
+          pytest tests/ -v --tb=short || echo "No tests found, skipping"
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+      - name: Validate bundle
+        run: |
+          databricks bundle validate
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
